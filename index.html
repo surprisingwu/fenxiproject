@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="css/font-icons.css">
+    <link rel="stylesheet" href="css/iuapmobile.um.css">
+    <link rel="stylesheet" href="css/index.css">
+    <script src="js/summer.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/Frameworks/iuapmobile.frameworks.ui.js"></script>
+    <script src="js/adaptive.js"></script>
+    <script src="js/echarts.js"></script>
+    <script src="js/index.js"></script>
+</head>
+<body>
+<div class="um-win">
+    <header>
+        <i class="turnBackLastPage" onclick="functionback()"></i>
+        <h3 class="headerTitle">单据列表</h3>
+        <span class="checkOperation">查询</span>
+        <span class="selectWeidu">维度</span>
+    </header>
+    <nav>
+        <ul class="navWraper">
+            <li class="navItem navActive" id="myProject">我的项目</li>
+            <li class="navArrow" style="display: none" id="navArrow"></li>
+            <li class="navItem" style="display: none" id="changeNav">我的项目</li>
+        </ul>
+    </nav>
+    <main>
+        <div id="main" style="height: 260px" style="display: block"></div>
+        <div id="listContainer">
+            <ul class="listWraper" id="listWraper">
+            </ul>
+        </div>
+    </main>
+</div>
+</body>
+</html>
