@@ -8,7 +8,7 @@ header{
 	box-sizing: border-box;
 	border-bottom: 0.026667rem solid #2DBBFA;
 	font-size: 0;
-	position: relative;
+	position: fixed;
 	top: 0;
 	left: 0;
 	color: #2DBBFA;
@@ -55,9 +55,67 @@ header .selectWeidu{
 	right: 0.4rem;
 	text-align: right;
 }
-
+header input {
+	display: none;
+}
+/*查询页面的一些样式*/
+/*重置body的样式*/
+body{
+	background: #fff;
+}
+/*查询页面头部的一些样式*/
+.searchBlock{
+	position: relative;
+	height: 0.8rem;
+	margin-top: 0.186667rem;
+	width: 8.0rem;
+	margin-left: 1.333333rem;
+}
+.searchIcon{
+	position: absolute;
+	width: 0.96rem;
+	height: 100%;
+	left:0;
+	background: url(../img/SearchIcon@2x.png) no-repeat center center;
+	background-size: 0.426667rem 0.426667rem;
+}
+.searchInput{
+	display: inline-block;
+	height: 100%;
+	width: 100%;
+	padding-left: 0.96rem;
+	background-color: #F2F2F2;
+	border-radius: 0.133333rem;
+	border: none;
+	outline: none;
+	font-size: 14px;
+	padding-right: 0.96rem;
+}
+.delateIcon{
+	position: absolute;
+	width: 0.96rem;
+	height: 100%;
+	right: 0;
+	background: url(../img/deleteIcon@2x.png) no-repeat center center;
+	background-size: 0.426667rem 0.426667rem;
+}
+input::-webkit-input-placeholder{
+	color: #999;
+}
+.cancelBtn{
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 1.333333rem;
+	height: 100%;
+	font-size: 14px;
+	color: #2DBBFA;
+	text-align: center;
+	line-height: 1.173333rem;
+}
 /*导航栏的样式*/
 nav{
+	margin-top: 1.173333rem;
 	height: 1.173333rem;
 	width: 100%;
 	font-size: 0;
@@ -94,6 +152,33 @@ nav .navActive{
 	border-bottom: 0.053333rem solid #2DBBFA;
 }
 /*main下面的list的样式*/
+.echartsWraper{
+	position: relative;
+	width: 100%;
+}
+/*小图标的样式*/
+.checkIconWraper{
+	width: 0.64rem;
+	height: 0.586667rem;
+	position: absolute;
+	top: 0.24rem;
+	right: 0.24rem;
+	z-index: 99;
+}
+.checkIconWraper>i{
+	width: 100%;
+	height: 100%;
+	display: block;
+	background: url("../img/pickerDate@2x.png") no-repeat center;
+	background-size: 0.64rem 0.586667rem;
+}
+@media  (-webkit-min-device-pixel-ratio: 3),(min-device-pixel-ratio: 3) {
+    .checkIconWraper>i{
+       	background: url("../img/pickerDate@3x.png") no-repeat center;
+		background-size: 0.64rem 0.586667rem;
+    }
+}
+/*下面的列表的样式*/
 #listContainer{
 	width: 100%;
 }
@@ -154,6 +239,50 @@ nav .navActive{
 	line-height: 1.386667rem;
 	color: #151515;
 }
+/*查询页面中间内容部分*/
+.checkpagemain{
+	padding-top: 1.173333rem;
+	font-size: 0;
+	color: #666;
+}
+.keywordsContainer{
+	width: 100%;
+}
+.keywordsTitleSpan{
+
+}
+.keywordsContent{
+
+}
+.keywordsTitle{
+	padding: 0.48rem 0 0.373333rem 0.4rem;
+	font-size: 13px;
+}
+.keywordsListWraper{
+	width: 100%;
+	display: flex;
+	font-size: 12px;
+	flex-flow: row wrap;
+  	align-content: flex-start;
+	padding-left: 0.4rem;
+	padding-right: 0.133333rem;
+}
+
+.keywordsListItem{	
+	flex: 0 0 25%;
+	height: 0.853333rem;
+	line-height: 0.853333rem;
+	padding-right: 0.266667rem;
+	margin-top: 0.266667rem;
+}
+.keywordsListText{
+	display: inline-block;
+	font-size: 12px;
+	text-align: center;
+	border-radius: 0.106667rem;
+	background-color: #F1F1F1;
+	width: 100%;
+}
 /*公共样式*/
 .backgroundColor_activity{
 	background-color: #E8704E;
@@ -166,4 +295,24 @@ nav .navActive{
 }
 .backgroundColor_NC{
 	background-color:#5EC8E7;
+}
+/*重置滚动选择器的一些样式*/
+.um-picker.dwb.dwb1.dwb-e {
+    color: #999;
+    font-weight: normal;
+    font-size: 15px;
+}
+.um-picker.dwb.dwb0.dwb-e {
+    color: #00A0E8;
+    font-weight: normal;
+    font-size: 15px;
+}
+.mbsc-ios7 .dwwol{
+    margin: 0;
+}
+.mbsc-ios7 .dwbc{
+    background: #fff;
+}
+.mbsc-ios7 .dw-li{
+    font-size: 20px;
 }

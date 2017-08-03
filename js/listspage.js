@@ -56,6 +56,9 @@ var dataArr = [
     },
 ]
 summerready = function(){
+    $(".turnBackLastPage").on("click",function () {
+        window.location.href = "../index.html"
+    })
     //初始化控件
     $(function () {
         var listview = UM.listview("#listview_wrap");

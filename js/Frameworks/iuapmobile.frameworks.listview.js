@@ -126,7 +126,8 @@
 					}
 
 					// 加载下方
-					if (self.config.pullUpEnable && self._contentHeight <= (self._viewHeight + self._scrollTop) && self._pullDirection == 'up') {
+                    if (self.config.pullUpEnable && (self._viewHeight + self._scrollTop)-self._contentHeight >=-1 && self._pullDirection == 'up') {
+					// if (self.config.pullUpEnable && self._contentHeight <= (self._viewHeight + self._scrollTop) && self._pullDirection == 'up') {
 						e.preventDefault();
 						if (!self.config.insertDOM) {
 							self.$element.append('<div class="' + self.opts.domDown.domClass + '"></div>');
