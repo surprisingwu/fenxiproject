@@ -2,8 +2,10 @@
  * Created by 巫运廷 on 2017/7/11.
  */
 //定义三个全局变量，用来接收。用户所选择的时间区间
-var wholeVariateYear = "";
-var wholeVariateTime = "";
+var wholeVariateTime = {
+    begindate: '2017-01-01',
+    enddate:'2017-12-31',
+};
 // var wholeVariateMonth = "";
 //模拟返回的数据对应的   字段和颜色
 var dataColor = [
@@ -92,12 +94,34 @@ var globalState = {
             value: "jkbxr"
         }],
 }
+var globalPersonalSate={
+    szxmid: [
+        {
+            name: "收支项目",
+            value: "szxmid"
+        },
+        {
+            name: "单据类型",
+            value: "djlx"
+        }],
+    djlx: [
+        {
+            name: "单据类型",
+            value: "djlx"
+        }, {
+            name: "收支项目",
+            value: "szxmid"
+        }
+       ],
+}
+var currentPersonlIndex = 0;
 //用来保存当前的维度，来确定层级的顺序
 var activeState = "szxmid";
 //每次点击 +1
 var currentIndex = 0;
 //一个对象用来保存，当前层级的主键和参数
 var currentStateObj = {};
+var isPersonage = "N";
 summerready = function () {
     //头部搜索，返回，取消的逻辑
     aboutInputHandler();
@@ -113,8 +137,12 @@ summerready = function () {
     })
     //维度和时间区间。 回调里面调数据，来展示用户选择的维度或区间内的数据
     $(function () {
-        var weidu = [
-            "人员", "部门", "默认收支项目", "单据类型", "收支项目"]
+        if (isPersonage === "Y"){
+            var weidu = ["收支项目","默认收支项目","单据类型"]
+        }else {
+            var weidu = [
+                "人员", "部门", "默认收支项目", "单据类型", "收支项目"]
+        }
         $.scrEvent({
             data: weidu,
             evEle: '#weiduInput',
@@ -125,200 +153,27 @@ summerready = function () {
                 switch (data) {
                     case "人员":
                         activeState = "jkbxr";
-                        //@todo 拿到当前的状态，可以调取后台获取相应的数据进行渲染。如果设置时间，则获取相应的时间区间。
-                        var data = {
-                            "code": "SUCCESS",
-                            "datas": [
-                                {
-                                    "dept_name": null,
-                                    "dims_name": "郭晓天",
-                                    "dims_pk": "1001ZZ10000000000Q8J",
-                                    "djbh": null,
-                                    "djlx": null,
-                                    "djlxname": null,
-                                    "djrq": null,
-                                    "jkbxr": null,
-                                    "jkbxr_name": null,
-                                    "org_name": null,
-                                    "pk_dept": null,
-                                    "pk_org": null,
-                                    "szxm_name": null,
-                                    "szxmid": null,
-                                    "total": "122002"
-                                },
-                                {
-                                    "dept_name": null,
-                                    "dims_name": "zyq",
-                                    "dims_pk": "1001ZZ10000000001E5N",
-                                    "djbh": null,
-                                    "djlx": null,
-                                    "djlxname": null,
-                                    "djrq": null,
-                                    "jkbxr": null,
-                                    "jkbxr_name": null,
-                                    "org_name": null,
-                                    "pk_dept": null,
-                                    "pk_org": null,
-                                    "szxm_name": null,
-                                    "szxmid": null,
-                                    "total": "9141"
-                                },
-                                {
-                                    "dept_name": null,
-                                    "dims_name": "丁雪华",
-                                    "dims_pk": "1001F4100000000006BG",
-                                    "djbh": null,
-                                    "djlx": null,
-                                    "djlxname": null,
-                                    "djrq": null,
-                                    "jkbxr": null,
-                                    "jkbxr_name": null,
-                                    "org_name": null,
-                                    "pk_dept": null,
-                                    "pk_org": null,
-                                    "szxm_name": null,
-                                    "szxmid": null,
-                                    "total": "375"
-                                }
-                            ],
-                            "msg": "SUCCESS"
-                        }
-                        checkWeiduInit(data);
-                        drawEhart(data);
+                      var params={};
+                      params[activeState] = "all";
+                      callActionData(wholeVariateTime.begindate,wholeVariateTime.enddate,params,checkWeiduInit)
                         break;
                     case "部门":
                         activeState = "fydeptid";
-                        var data = {
-                            "code": "SUCCESS",
-                            "datas": [
-                                {
-                                    "dept_name": null,
-                                    "dims_name": "科技部",
-                                    "dims_pk": "1001F4100000000002GM",
-                                    "djbh": null,
-                                    "djlx": null,
-                                    "djlxname": null,
-                                    "djrq": null,
-                                    "jkbxr": null,
-                                    "jkbxr_name": null,
-                                    "org_name": null,
-                                    "pk_dept": null,
-                                    "pk_org": null,
-                                    "szxm_name": null,
-                                    "szxmid": null,
-                                    "total": "131518"
-                                }
-                            ],
-                            "msg": "SUCCESS"
-                        }
-                        checkWeiduInit(data)
-                        drawEhart(data);
+                        var params={};
+                        params[activeState] = "all";
+                        callActionData(wholeVariateTime.begindate,wholeVariateTime.enddate,params,checkWeiduInit)
                         break;
                     case  "单据类型":
                         activeState = "djlx";
-                        var data = {
-                            "code": "SUCCESS",
-                            "datas": [
-                                {
-                                    "dept_name": null,
-                                    "dims_name": "差旅费报销单",
-                                    "dims_pk": "2641",
-                                    "djbh": null,
-                                    "djlx": null,
-                                    "djlxname": null,
-                                    "djrq": null,
-                                    "jkbxr": null,
-                                    "jkbxr_name": null,
-                                    "org_name": null,
-                                    "pk_dept": null,
-                                    "pk_org": null,
-                                    "szxm_name": null,
-                                    "szxmid": null,
-                                    "total": "263036"
-                                }
-                            ],
-                            "msg": "SUCCESS"
-                        }
-                        checkWeiduInit(data)
-                        drawEhart(data)
+                        var params={};
+                        params[activeState] = 'all';
+                        callActionData(wholeVariateTime.begindate,wholeVariateTime.enddate,params,checkWeiduInit)
                         break;
                     default:
-                        var data = {
-                            "code": "SUCCESS",
-                            "datas": [
-                                {
-                                    "dept_name": null,
-                                    "dims_name": "差旅费收支项",
-                                    "dims_pk": "1001F4100000000006D6",
-                                    "djbh": null,
-                                    "djlx": null,
-                                    "djlxname": null,
-                                    "djrq": null,
-                                    "jkbxr": null,
-                                    "jkbxr_name": null,
-                                    "org_name": null,
-                                    "pk_dept": null,
-                                    "pk_org": null,
-                                    "szxm_name": null,
-                                    "szxmid": null,
-                                    "total": "621"
-                                },
-                                {
-                                    "dept_name": null,
-                                    "dims_name": "通讯费",
-                                    "dims_pk": "1001D210000000003H1M",
-                                    "djbh": null,
-                                    "djlx": null,
-                                    "djlxname": null,
-                                    "djrq": null,
-                                    "jkbxr": null,
-                                    "jkbxr_name": null,
-                                    "org_name": null,
-                                    "pk_dept": null,
-                                    "pk_org": null,
-                                    "szxm_name": null,
-                                    "szxmid": null,
-                                    "total": "4000"
-                                },
-                                {
-                                    "dept_name": null,
-                                    "dims_name": "固定资产收支大项",
-                                    "dims_pk": "1001ZZ10000000003679",
-                                    "djbh": null,
-                                    "djlx": null,
-                                    "djlxname": null,
-                                    "djrq": null,
-                                    "jkbxr": null,
-                                    "jkbxr_name": null,
-                                    "org_name": null,
-                                    "pk_dept": null,
-                                    "pk_org": null,
-                                    "szxm_name": null,
-                                    "szxmid": null,
-                                    "total": "5141"
-                                },
-                                {
-                                    "dept_name": null,
-                                    "dims_name": "差旅费",
-                                    "dims_pk": "1001F4100000000006D2",
-                                    "djbh": null,
-                                    "djlx": null,
-                                    "djlxname": null,
-                                    "djrq": null,
-                                    "jkbxr": null,
-                                    "jkbxr_name": null,
-                                    "org_name": null,
-                                    "pk_dept": null,
-                                    "pk_org": null,
-                                    "szxm_name": null,
-                                    "szxmid": null,
-                                    "total": "121756"
-                                }
-                            ],
-                            "msg": "SUCCESS"
-                        }
-                       checkWeiduInit(data)
-                        drawEhart(data)
+                        var params={};
+                        activeState = "szxmid";
+                        params[activeState] = 'all';
+                        callActionData(wholeVariateTime.begindate,wholeVariateTime.enddate,params,checkWeiduInit)
                 }
             }
         });
@@ -329,93 +184,30 @@ summerready = function () {
             timeBoo: false,
             title: "选择时间区间",
             afterAction: function (d1, d2) {
-                wholeVariateYear = d1;
+                //日期格式   2017-01-01     2017-12-31
                 //第二个参数不区分是季度还是月份。
-                wholeVariateTime = d2;
-                //@todo 这里根据时间区间，去后台那数据。在不再进行选择时。后面的维度查询都基于此进行查询的。
+                var d1 = parseInt(d1);
+                if (d2.indexOf("月")>=0){
+                    var checkMonth = parseInt(d2);
+                    var checkDays = new Date(d1,checkMonth,0).getDate();
+                    wholeVariateTime.begindate = new Date(d1+"-"+checkMonth+"-01").Format("yyyy-MM-dd");
+                    wholeVariateTime.enddate =new Date( d1+"-"+checkMonth+"-"+checkDays).Format("yyyy-MM-dd")
+                    callActionData(wholeVariateTime.begindate,wholeVariateTime.enddate)
+                }else {
+                    var checkQuarter = parseInt(d2);
+                    var checkFirstMonth = (checkQuarter-1)*3+1;
+                    var checkEndtMonth = (checkQuarter-1)*3+3;
+                    var checkDays =  new Date(d1,checkEndtMonth,0).getDate();
+                    wholeVariateTime.begindate = new Date(d1+"-"+checkFirstMonth+"-01").Format("yyyy-MM-dd")
+                    wholeVariateTime.enddate = new Date(d1+"-"+checkEndtMonth+"-"+checkDays).Format("yyyy-MM-dd")
+                    callActionData(wholeVariateTime.begindate,wholeVariateTime.enddate)
+                }
             }
         });
     })
-
-    var data = {
-        "code": "SUCCESS",
-        "datas": [
-            {
-                "dept_name": null,
-                "dims_name": "差旅费收支项",
-                "dims_pk": "1001F4100000000006D6",
-                "djbh": null,
-                "djlx": null,
-                "djlxname": null,
-                "djrq": null,
-                "jkbxr": null,
-                "jkbxr_name": null,
-                "org_name": null,
-                "pk_dept": null,
-                "pk_org": null,
-                "szxm_name": null,
-                "szxmid": null,
-                "total": "621"
-            },
-            {
-                "dept_name": null,
-                "dims_name": "通讯费",
-                "dims_pk": "1001D210000000003H1M",
-                "djbh": null,
-                "djlx": null,
-                "djlxname": null,
-                "djrq": null,
-                "jkbxr": null,
-                "jkbxr_name": null,
-                "org_name": null,
-                "pk_dept": null,
-                "pk_org": null,
-                "szxm_name": null,
-                "szxmid": null,
-                "total": "4000"
-            },
-            {
-                "dept_name": null,
-                "dims_name": "固定资产收支大项",
-                "dims_pk": "1001ZZ10000000003679",
-                "djbh": null,
-                "djlx": null,
-                "djlxname": null,
-                "djrq": null,
-                "jkbxr": null,
-                "jkbxr_name": null,
-                "org_name": null,
-                "pk_dept": null,
-                "pk_org": null,
-                "szxm_name": null,
-                "szxmid": null,
-                "total": "5141"
-            },
-            {
-                "dept_name": null,
-                "dims_name": "差旅费",
-                "dims_pk": "1001F4100000000006D2",
-                "djbh": null,
-                "djlx": null,
-                "djlxname": null,
-                "djrq": null,
-                "jkbxr": null,
-                "jkbxr_name": null,
-                "org_name": null,
-                "pk_dept": null,
-                "pk_org": null,
-                "szxm_name": null,
-                "szxmid": null,
-                "total": "121756"
-            }
-        ],
-        "msg": "SUCCESS"
-    }
-    $("#myProject").data("nav0",JSON.stringify(data));
     //图标初始化
     var myChart = echarts.init(document.getElementById('main'));
     //第一次调用，默认显示的维度是收支项目
-    drawEhart(data)
     $(".navWraper").on("click","li",function () {
         var currentLiIndex = $(this).index();
         var currentLiNum = currentLiIndex/2;
@@ -425,14 +217,15 @@ summerready = function () {
         $("~li",this).remove();
         var data = JSON.parse($(this).data("nav"+currentLiNum));
         $(this).addClass("navActive");
-        currentIndex--;
+        currentIndex = currentLiNum;
         drawEhart(data);
-    })
-    function drawEhart(data, dataMesg) {
-        var data = data.datas
-        if (data.length === 0 || data === null) {
-            return
+        if (currentLiIndex === 0) {
+            $("#checkTimeRang").show();
         }
+    })
+    callAction();
+    function drawEhart(data) {
+        var data = data.datas
         //这里肯定要先判断是数组还是单个对象。数组对应完整的图表。单个的代表具体的某一项。
         //在调方法时，构造出相应的数组
         myChart.clean;
@@ -541,108 +334,184 @@ summerready = function () {
     function listBindEvent() {
         //点击列表的每一项，渲染相应的图表和数据
         $("#listWraper li").on("click", function () {
-            if (currentIndex === 3) {
-                window.location.href = "html/listspage.html";
+            $("#checkTimeRang").hide();
+            if (isPersonage === "Y"){
+                if (currentPersonlIndex === 1){
+                    window.location.href = "html/listspage.html";
+                }
+                var tempKey = globalPersonalSate[activeState];
+                //获取相应的主键
+                currentStateObj[tempKey[currentPersonlIndex].value] = $(this).attr("name");
+                //每点击一次，层级加一
+                currentIndex++;
+                var currentSate = tempKey[currentPersonlIndex].value;
+                currentStateObj[currentSate] = "all";
+            }else {
+                if (currentIndex === 3) {
+                    window.location.href = "html/listspage.html";
+                }
+                var tempKey = globalState[activeState];
+                //获取相应的主键
+                currentStateObj[tempKey[currentIndex].value] = $(this).attr("name");
+                //每点击一次，层级加一
+                currentIndex++;
+                var currentSate = tempKey[currentIndex].value;
+                currentStateObj[currentSate] = "all";
             }
-            var tempKey = globalState[activeState];
-            //获取相应的主键
-            currentStateObj[tempKey[currentIndex].value] = $(this).attr("name");
-            //每点击一次，层级加一
-            currentIndex++;
-            var currentSate = tempKey[currentIndex].value;
-            currentStateObj[currentSate] = "all";
-            //@todo  如果设置时间，还要获取时间，发送请求，拿到相应的数据。
-            var newData = {
-                "code": "SUCCESS",
-                "datas": [
-                    {
-                        "dept_name": null,
-                        "dims_name": "差旅费收支项",
-                        "dims_pk": "1001F4100000000006D6",
-                        "djbh": null,
-                        "djlx": null,
-                        "djlxname": null,
-                        "djrq": null,
-                        "jkbxr": null,
-                        "jkbxr_name": null,
-                        "org_name": null,
-                        "pk_dept": null,
-                        "pk_org": null,
-                        "szxm_name": null,
-                        "szxmid": null,
-                        "total": "621"
-                    },
-                    {
-                        "dept_name": null,
-                        "dims_name": "通讯费",
-                        "dims_pk": "1001D210000000003H1M",
-                        "djbh": null,
-                        "djlx": null,
-                        "djlxname": null,
-                        "djrq": null,
-                        "jkbxr": null,
-                        "jkbxr_name": null,
-                        "org_name": null,
-                        "pk_dept": null,
-                        "pk_org": null,
-                        "szxm_name": null,
-                        "szxmid": null,
-                        "total": "4000"
-                    },
-                    {
-                        "dept_name": null,
-                        "dims_name": "固定资产收支大项",
-                        "dims_pk": "1001ZZ10000000003679",
-                        "djbh": null,
-                        "djlx": null,
-                        "djlxname": null,
-                        "djrq": null,
-                        "jkbxr": null,
-                        "jkbxr_name": null,
-                        "org_name": null,
-                        "pk_dept": null,
-                        "pk_org": null,
-                        "szxm_name": null,
-                        "szxmid": null,
-                        "total": "5141"
-                    },
-                    {
-                        "dept_name": null,
-                        "dims_name": "差旅费",
-                        "dims_pk": "1001F4100000000006D2",
-                        "djbh": null,
-                        "djlx": null,
-                        "djlxname": null,
-                        "djrq": null,
-                        "jkbxr": null,
-                        "jkbxr_name": null,
-                        "org_name": null,
-                        "pk_dept": null,
-                        "pk_org": null,
-                        "szxm_name": null,
-                        "szxmid": null,
-                        "total": "121756"
-                    }
-                ],
-                "msg": "SUCCESS"
-            }
-            var _text = $(".detailMesg", this).text();
-            var htmlStr = ' <li class="navArrow" id="navArrow"></li>\
+            var _self = this;
+            $_ajax._post({
+                url:'com.mobile.controller.MobileReportAnalyzeController',
+                handler:'handler',
+                data:{
+                    cuserid: '1001F410000000000446',
+                    begindate:wholeVariateTime.begindate,
+                    enddate:wholeVariateTime.enddate,
+                    dimsmap: currentStateObj
+                },
+                success:mycallback,
+                err: myerr
+            })
+            function mycallback(data) {
+                // if (data.datas === null) {
+                //     $.setTotastText({
+                //         text: "没有更多的数据了！"
+                //     })
+                //     return;
+                // }
+                var _text = $(".detailMesg", _self).text();
+                var htmlStr = ' <li class="navArrow" id="navArrow"></li>\
                 <li class="navItem" id="nav_' + currentIndex + '">' + _text + '</li>'
-            $(".navWraper").append(htmlStr);
-            $("#nav_" + currentIndex).data("nav"+currentIndex,JSON.stringify(newData))
-            $("#nav_" + currentIndex).siblings().removeClass("navActive");
-            $("#nav_" + currentIndex).addClass("navActive");
-            drawEhart(newData);
+                $(".navWraper").append(htmlStr);
+                var data = {
+                    "code": "SUCCESS",
+                    "datas": [
+                        {
+                            "dept_name": null,
+                            "dims_name": "差旅费收支项",
+                            "dims_pk": "1001F4100000000006D6",
+                            "djbh": null,
+                            "djlx": null,
+                            "djlxname": null,
+                            "djrq": null,
+                            "jkbxr": null,
+                            "jkbxr_name": null,
+                            "org_name": null,
+                            "pk_dept": null,
+                            "pk_org": null,
+                            "szxm_name": null,
+                            "szxmid": null,
+                            "total": "621"
+                        },
+                        {
+                            "dept_name": null,
+                            "dims_name": "通讯费",
+                            "dims_pk": "1001D210000000003H1M",
+                            "djbh": null,
+                            "djlx": null,
+                            "djlxname": null,
+                            "djrq": null,
+                            "jkbxr": null,
+                            "jkbxr_name": null,
+                            "org_name": null,
+                            "pk_dept": null,
+                            "pk_org": null,
+                            "szxm_name": null,
+                            "szxmid": null,
+                            "total": "4000"
+                        },
+                        {
+                            "dept_name": null,
+                            "dims_name": "固定资产收支大项",
+                            "dims_pk": "1001ZZ10000000003679",
+                            "djbh": null,
+                            "djlx": null,
+                            "djlxname": null,
+                            "djrq": null,
+                            "jkbxr": null,
+                            "jkbxr_name": null,
+                            "org_name": null,
+                            "pk_dept": null,
+                            "pk_org": null,
+                            "szxm_name": null,
+                            "szxmid": null,
+                            "total": "5141"
+                        },
+                        {
+                            "dept_name": null,
+                            "dims_name": "差旅费",
+                            "dims_pk": "1001F4100000000006D2",
+                            "djbh": null,
+                            "djlx": null,
+                            "djlxname": null,
+                            "djrq": null,
+                            "jkbxr": null,
+                            "jkbxr_name": null,
+                            "org_name": null,
+                            "pk_dept": null,
+                            "pk_org": null,
+                            "szxm_name": null,
+                            "szxmid": null,
+                            "total": "121756"
+                        }
+                    ],
+                    "msg": "SUCCESS"
+                }
+                $("#nav_" + currentIndex).data("nav"+currentIndex,JSON.stringify(data))
+                $("#nav_" + currentIndex).siblings().removeClass("navActive");
+                $("#nav_" + currentIndex).addClass("navActive");
+                drawEhart(data)
+            }
+            function myerr(err) {
+                $.setTotastText({
+                    text: "网络异常，请稍候重试！"
+                })
+            }
         })
     }
-
+    //初次进入页面时的逻辑
+    function callAction() {
+        $_ajax._post({
+            url:'com.mobile.controller.MobileReportAnalyzeController',
+            handler:'handler',
+            data:{
+                cuserid: '1001F410000000000446',
+                begindate:'2017-01-01',
+                enddate:'2017-12-31',
+                dimsmap:{
+                    "szxmid": "all"
+                }
+            },
+            success:mycallback,
+            err: myerr
+        })
+        function mycallback(data) {
+            if (data.datas === null) {
+                $.setTotastText({
+                    text: "没有更多的数据！"
+                })
+                return;
+            }
+            if (data.datas[0].ispersonal === "Y"){
+                isPersonage = "Y"
+                drawEhart(data)
+            }else {
+                drawEhart(data);
+            }
+            $("#myProject").data("nav0",JSON.stringify(data));
+        }
+        function myerr(err) {
+            $.setTotastText({
+                text: "网络异常，请稍候重试！"
+            })
+        }
+    }
 //退出小应用的方法
     function functionback() {
         var u = navigator.userAgent,
             app = navigator.appVersion;
         var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1;
         var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+        //释放一些对象和变量
         if (isAndroid) {
             navigator.app.exitApp();
         }
@@ -656,7 +525,7 @@ summerready = function () {
         }
     }
 
-//保留一位小数
+//保留几位小数
     function translate_1(number, n) {
         n = n ? parseInt(n) : 0;
         if (n <= 0) return Math.round(number);
@@ -713,6 +582,43 @@ summerready = function () {
         if ($(".navWraper>li").length >1){
             $("#myProject~li").remove();
             $myProject.addClass("navActive");
+        }
+    }
+    //调取后台那数据
+    function callActionData(startTime,endTime,params,fn) {
+        var defaultParam = {
+            "szxmid": "all"
+        }
+        $_ajax._post({
+            url:'com.mobile.controller.MobileReportAnalyzeController',
+            handler:'handler',
+            data:{
+                cuserid: '1001F410000000000446',//@todo 现在写死的，后面从原生获取，加一个参数
+                begindate:startTime,
+                enddate:endTime,
+                dimsmap: params||defaultParam
+            },
+            success:mycallback,
+            err: myerr
+        })
+        function mycallback(data) {
+            if (data.datas === null) {
+                $.setTotastText({
+                    text: "没有更多的数据！"
+                })
+                return;
+            }
+            drawEhart(data);
+            try {
+                fn(data)
+            }catch (e){
+
+            }
+        }
+        function myerr(err) {
+            $.setTotastText({
+                text: "网络异常，请稍候重试！"
+            })
         }
     }
 }

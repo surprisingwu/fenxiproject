@@ -330,7 +330,7 @@
             // var scText4 = hour; // 小时
             // var scText5 = minute; // 分钟
             $('.sel-con').find('.elem').eq(0).find('.ele').each(function(){
-                if($(this).text()==year){
+                if(parseInt($(this).text())==year){
                     $(this).parents('.scroll')[0].scrollTop = $(this).index()*36;
                 }
             });
@@ -340,7 +340,7 @@
                 }
             });
             $('.sel-con').find('.elem').eq(2).find('.ele').each(function(){
-                if($(this).text()==month){
+                if(parseInt($(this).text())==month){
                     $(this).parents('.scroll')[0].scrollTop = $(this).index()*36;
                 }
             });
