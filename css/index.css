@@ -210,7 +210,7 @@ nav .navActive{
 		background-size: 0.213333rem 0.4rem;
     }
 }
-.listItem:first-child{
+#listWraper .um-listview-row:first-child .listItem{
 	border-top: 0.026667rem solid #F7F7F7;
 }
 .circleContainer{
@@ -315,4 +315,20 @@ nav .navActive{
 }
 .mbsc-ios7 .dw-li{
     font-size: 20px;
+}
+/*重置列表组件的一些样式*/
+.um-list .um-list-item-inner:after{
+	height: 0 !important;
+}
+.um-list .um-list-item-body{
+	padding: 0;
+	padding-right: 15px;
+}
+.um-listview-down {
+    font-size: 15px;
+   /* text-align: center;*/
+}
+.um-list{
+	border-top: none;
+	border-bottom: none;
 }

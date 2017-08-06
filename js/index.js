@@ -6,7 +6,6 @@ var wholeVariateTime = {
     begindate: '2017-01-01',
     enddate:'2017-12-31',
 };
-// var wholeVariateMonth = "";
 //模拟返回的数据对应的   字段和颜色
 var dataColor = [
     {
@@ -130,6 +129,27 @@ summerready = function () {
         $("#photoShow").hide();
         $("#checkPage").show();
     })
+    //listview进行组件初始化
+    $(function () {
+        var listview = UM.listview("#listContainer");
+//        listview.on("pullDown", function (sender) {
+//            sender.refresh();
+//        });
+        listview.on("pullUp", function (sender) {
+            // pageIndex++;
+            // callservice(pageIndex)
+            sender.refresh();
+        });
+        listview.on("itemDelete", function (sender, args) {
+        });
+        listview.on("itemClick", function (sender, args) {
+        });
+        listview.on("itemSwipeLeft", function (sender, args) {
+            sender.showItemMenu(args.$target);
+        });
+        listview.on("tapHold", function () {
+        });
+    });
     //点击查询状态下的箭头
     $("#checkArrow").on("click", function () {
         $("#photoShow").show();
@@ -224,6 +244,37 @@ summerready = function () {
         }
     })
     callAction();
+    var data = {
+        "code": "SUCCESS",
+        "datas": [
+            {
+                "dims_name": "交通费",
+                "dims_pk": "1001D210000000003H1O",
+                "ispersonal": "Y",
+                "total": "30"
+            },
+            {
+                "dims_name": "通讯费",
+                "dims_pk": "1001D210000000003H1M",
+                "ispersonal": "Y",
+                "total": "5041.11"
+            },
+            {
+                "dims_name": "固定资产收支大项",
+                "dims_pk": "1001ZZ10000000003679",
+                "ispersonal": "Y",
+                "total": "5141"
+            },
+            {
+                "dims_name": null,
+                "dims_pk": null,
+                "ispersonal": "Y",
+                "total": "88867"
+            }
+        ],
+        "msg": "SUCCESS"
+    }
+    drawEhart(data);
     function drawEhart(data) {
         var data = data.datas
         //这里肯定要先判断是数组还是单个对象。数组对应完整的图表。单个的代表具体的某一项。
@@ -314,7 +365,9 @@ summerready = function () {
         var htmlStr = "";
         var $listWraper = $("#listWraper");
         data.forEach(function (item, index) {
-            htmlStr += '<li class="listItem" name="' + item.dims_pk + '">'
+            htmlStr += '<li class="um-listview-row" name="' + item.dims_pk + '">'
+                +'<a href="#" class="um-list-item um-swipe-action um-no-icon">'
+                +'<div class="um-list-item-inner"><div class="um-list-item-body listItem">'
                 + '<span class="circleContainer ' + dataColor[index].background + '">'
                 + '</span>'
                 + '<span class="detailMesg">'
@@ -326,7 +379,20 @@ summerready = function () {
                 + '<span class="moneyContainer">￥' + item.total
                 + '</span>'
                 + '<i class="arrowContainer"></i>'
-                + '</li>'
+                +'</div> </div> </a> </li>'
+            // htmlStr += '<li class="listItem" name="' + item.dims_pk + '">'
+            //     + '<span class="circleContainer ' + dataColor[index].background + '">'
+            //     + '</span>'
+            //     + '<span class="detailMesg">'
+            //     + item.dims_name
+            //     + '</span>'
+            //     + '<span class="percentageContainer">'
+            //     + Math.round(item.total / total * 100 / 1) + "%"
+            //     + '</span>'
+            //     + '<span class="moneyContainer">￥' + item.total
+            //     + '</span>'
+            //     + '<i class="arrowContainer"></i>'
+            //     + '</li>'
         })
         $listWraper.append(htmlStr);
     }
@@ -468,7 +534,7 @@ summerready = function () {
             }
         })
     }
-    //初次进入页面时的逻辑
+//初次进入页面时的逻辑
     function callAction() {
         $_ajax._post({
             url:'com.mobile.controller.MobileReportAnalyzeController',
@@ -550,12 +616,11 @@ summerready = function () {
             $(".cancelBtn").hide();
             $(".turnBackLastPage").show();
         })
-        //点击删除的iocn，删除input里面的内容
+//点击删除的iocn，删除input里面的内容
         $(".searchBlock .delateIcon").on("click", function () {
             $(".searchBlock .searchInput").val("");
         })
-        //点击搜索按钮，进行搜索
-        //监听input的keyup事件，实时查询
+//点击搜索按钮，进行搜索
         $(".searchBlock .searchInput").on("keyup", function () {
             var inputValue = $(".searchBlock .searchInput").val().trim();
             if (inputValue === "") {
@@ -564,7 +629,7 @@ summerready = function () {
             //todo  调后台进行查询
 
         })
-        //点击取消按钮   初始化
+//点击取消按钮   初始化
         $(".cancelBtn").on("click", function () {
             $(".cancelBtn").hide();
             $(".searchBlock").animate({
@@ -572,19 +637,20 @@ summerready = function () {
             })
             $(".turnBackLastPage").show();
         })
-        //点击返回按钮，返回上一个页面
     }
+//选择维度 一些状态进行初始化
     function checkWeiduInit(data) {
         var $myProject = $("#myProject");
         $myProject.removeData("nav0")
         $myProject.data("nav0",JSON.stringify(data));
         currentIndex = 0;
+        currentPersonlIndex = 0;
         if ($(".navWraper>li").length >1){
             $("#myProject~li").remove();
             $myProject.addClass("navActive");
         }
     }
-    //调取后台那数据
+//调取后台那数据
     function callActionData(startTime,endTime,params,fn) {
         var defaultParam = {
             "szxmid": "all"
