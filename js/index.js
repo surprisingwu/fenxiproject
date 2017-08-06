@@ -244,37 +244,6 @@ summerready = function () {
         }
     })
     callAction();
-    var data = {
-        "code": "SUCCESS",
-        "datas": [
-            {
-                "dims_name": "交通费",
-                "dims_pk": "1001D210000000003H1O",
-                "ispersonal": "Y",
-                "total": "30"
-            },
-            {
-                "dims_name": "通讯费",
-                "dims_pk": "1001D210000000003H1M",
-                "ispersonal": "Y",
-                "total": "5041.11"
-            },
-            {
-                "dims_name": "固定资产收支大项",
-                "dims_pk": "1001ZZ10000000003679",
-                "ispersonal": "Y",
-                "total": "5141"
-            },
-            {
-                "dims_name": null,
-                "dims_pk": null,
-                "ispersonal": "Y",
-                "total": "88867"
-            }
-        ],
-        "msg": "SUCCESS"
-    }
-    drawEhart(data);
     function drawEhart(data) {
         var data = data.datas
         //这里肯定要先判断是数组还是单个对象。数组对应完整的图表。单个的代表具体的某一项。
