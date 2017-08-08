@@ -6,6 +6,9 @@ var wholeVariateTime = {
     begindate: '2017-01-01',
     enddate:'2017-12-31',
 };
+var cuserid = "1001F410000000000446";
+//分页的索引
+var pageIndex = 1;
 //模拟返回的数据对应的   字段和颜色
 var dataColor = [
     {
@@ -23,7 +26,48 @@ var dataColor = [
     {
         color: "#5EC8E7",
         background: "backgroundColor_NC"
-    }
+    },
+    {
+        color: "#5EC8E7",
+        background: "backgroundColor_NC"
+    },
+    {
+        color: "#5EC8E7",
+        background: "backgroundColor_NC"
+    },
+    {
+        color: "#5EC8E7",
+        background: "backgroundColor_NC"
+    },
+    {
+        color: "#5EC8E7",
+        background: "backgroundColor_NC"
+    },
+    {
+        color: "#5EC8E7",
+        background: "backgroundColor_NC"
+    },
+    {
+        color: "#5EC8E7",
+        background: "backgroundColor_NC"
+    },{
+        color: "#5EC8E7",
+        background: "backgroundColor_NC"
+    },
+    {
+        color: "#5EC8E7",
+        background: "backgroundColor_NC"
+    },
+    {
+        color: "#5EC8E7",
+        background: "backgroundColor_NC"
+    },
+    {
+        color: "#5EC8E7",
+        background: "backgroundColor_NC"
+    },
+
+
 ]
 //定义一个全局的数组，所有的状态。一个变量用来记录当前的显示的状态
 var globalState = {
@@ -111,7 +155,7 @@ var globalPersonalSate={
             name: "收支项目",
             value: "szxmid"
         }
-       ],
+    ],
 }
 var currentPersonlIndex = 0;
 //用来保存当前的维度，来确定层级的顺序
@@ -119,7 +163,9 @@ var activeState = "szxmid";
 //每次点击 +1
 var currentIndex = 0;
 //一个对象用来保存，当前层级的主键和参数
-var currentStateObj = {};
+var currentStateObj = {
+    szxmid: "all"
+};
 var isPersonage = "N";
 summerready = function () {
     //头部搜索，返回，取消的逻辑
@@ -136,8 +182,13 @@ summerready = function () {
 //            sender.refresh();
 //        });
         listview.on("pullUp", function (sender) {
-            // pageIndex++;
-            // callservice(pageIndex)
+            pageIndex++;
+            callActionData({
+                startTime:wholeVariateTime.begindate,
+                endTime:wholeVariateTime.enddate,
+                dimsmap: currentStateObj,
+                pageIndex: pageIndex
+            })
             sender.refresh();
         });
         listview.on("itemDelete", function (sender, args) {
@@ -170,31 +221,25 @@ summerready = function () {
             defValue: "默认收支项目",
             afterAction: function (data) {
                 //根据选择的不同，维度进行调取后台拿相应的数据
-                switch (data) {
-                    case "人员":
-                        activeState = "jkbxr";
-                      var params={};
-                      params[activeState] = "all";
-                      callActionData(wholeVariateTime.begindate,wholeVariateTime.enddate,params,checkWeiduInit)
-                        break;
-                    case "部门":
-                        activeState = "fydeptid";
-                        var params={};
-                        params[activeState] = "all";
-                        callActionData(wholeVariateTime.begindate,wholeVariateTime.enddate,params,checkWeiduInit)
-                        break;
-                    case  "单据类型":
-                        activeState = "djlx";
-                        var params={};
-                        params[activeState] = 'all';
-                        callActionData(wholeVariateTime.begindate,wholeVariateTime.enddate,params,checkWeiduInit)
-                        break;
-                    default:
-                        var params={};
-                        activeState = "szxmid";
-                        params[activeState] = 'all';
-                        callActionData(wholeVariateTime.begindate,wholeVariateTime.enddate,params,checkWeiduInit)
+                pageIndex = 1;
+                if(data==="人员"){
+                    activeState = "jkbxr";
+                }else if (data==="部门"){
+                    activeState = "fydeptid";
+                }else if (data === "单据类型"){
+                    activeState = "djlx";
+                }else {
+                    activeState = "szxmid";
                 }
+                currentStateObj = $.deleteObjKey(currentStateObj);
+                currentStateObj[activeState] = "all";
+                callActionData({
+                    startTime:wholeVariateTime.begindate,
+                    endTime:wholeVariateTime.enddate,
+                    dimsmap: currentStateObj,
+                    initialize:checkWeiduInit,
+                    pageIndex: pageIndex
+                })
             }
         });
         $.dateSelector({
@@ -204,15 +249,15 @@ summerready = function () {
             timeBoo: false,
             title: "选择时间区间",
             afterAction: function (d1, d2) {
-                //日期格式   2017-01-01     2017-12-31
-                //第二个参数不区分是季度还是月份。
+                //日期格式   2017-01-01     2017-12-31   第二个参数不区分是季度还是月份。
                 var d1 = parseInt(d1);
+                currentStateObj = $.deleteObjKey(currentStateObj);
+                currentStateObj[activeState] = "all";
                 if (d2.indexOf("月")>=0){
                     var checkMonth = parseInt(d2);
                     var checkDays = new Date(d1,checkMonth,0).getDate();
                     wholeVariateTime.begindate = new Date(d1+"-"+checkMonth+"-01").Format("yyyy-MM-dd");
                     wholeVariateTime.enddate =new Date( d1+"-"+checkMonth+"-"+checkDays).Format("yyyy-MM-dd")
-                    callActionData(wholeVariateTime.begindate,wholeVariateTime.enddate)
                 }else {
                     var checkQuarter = parseInt(d2);
                     var checkFirstMonth = (checkQuarter-1)*3+1;
@@ -220,8 +265,12 @@ summerready = function () {
                     var checkDays =  new Date(d1,checkEndtMonth,0).getDate();
                     wholeVariateTime.begindate = new Date(d1+"-"+checkFirstMonth+"-01").Format("yyyy-MM-dd")
                     wholeVariateTime.enddate = new Date(d1+"-"+checkEndtMonth+"-"+checkDays).Format("yyyy-MM-dd")
-                    callActionData(wholeVariateTime.begindate,wholeVariateTime.enddate)
                 }
+                callActionData({
+                    startTime:wholeVariateTime.begindate,
+                    endTime:wholeVariateTime.enddate,
+                    dimsmap: currentStateObj,
+                })
             }
         });
     })
@@ -243,7 +292,72 @@ summerready = function () {
             $("#checkTimeRang").show();
         }
     })
-    callAction();
+    callActionData({
+        startTime:wholeVariateTime.begindate,
+        endTime:wholeVariateTime.enddate,
+        dimsmap: currentStateObj,
+    })
+    var data = {
+        "code": "SUCCESS",
+        "datas": [
+            {
+                "dims_name": "交通费",
+                "dims_pk": "1001D210000000003H1O",
+                "ispersonal": "Y",
+                "total": "30"
+            },
+            {
+                "dims_name": "通讯费",
+                "dims_pk": "1001D210000000003H1M",
+                "ispersonal": "Y",
+                "total": "5041.11"
+            },
+            {
+                "dims_name": "固定资产收支大项",
+                "dims_pk": "1001ZZ10000000003679",
+                "ispersonal": "Y",
+                "total": "5141"
+            },
+            {
+                "dims_name": "固定资产收支大项",
+                "dims_pk": "1001ZZ10000000003679",
+                "ispersonal": "Y",
+                "total": "5141"
+            },
+            {
+                "dims_name": "固定资产收支大项",
+                "dims_pk": "1001ZZ10000000003679",
+                "ispersonal": "Y",
+                "total": "5141"
+            },
+            {
+                "dims_name": "固定资产收支大项",
+                "dims_pk": "1001ZZ10000000003679",
+                "ispersonal": "Y",
+                "total": "5141"
+            },
+            {
+                "dims_name": "固定资产收支大项",
+                "dims_pk": "1001ZZ10000000003679",
+                "ispersonal": "Y",
+                "total": "5141"
+            },
+            {
+                "dims_name": "固定资产收支大项",
+                "dims_pk": "1001ZZ10000000003679",
+                "ispersonal": "Y",
+                "total": "5141"
+            },
+            {
+                "dims_name": null,
+                "dims_pk": null,
+                "ispersonal": "Y",
+                "total": "88867"
+            }
+        ],
+        "msg": "SUCCESS"
+    }
+    drawEhart(data);
     function drawEhart(data) {
         var data = data.datas
         //这里肯定要先判断是数组还是单个对象。数组对应完整的图表。单个的代表具体的某一项。
@@ -327,7 +441,6 @@ summerready = function () {
         renderList(data, totalMoney);
         listBindEvent();
     }
-
 //渲染图表下对应的列表  首先需要对应的颜色，数据  可以对后台返回的数据进行遍历，插入dom树后做处理。
     function renderList(data, total) {
         //@todo  data是否需要校验   为空，根据后台返回的数据格式来定
@@ -368,7 +481,7 @@ summerready = function () {
 
     function listBindEvent() {
         //点击列表的每一项，渲染相应的图表和数据
-        $("#listWraper li").on("click", function () {
+        $("#listWraper").on("click","li", function () {
             $("#checkTimeRang").hide();
             if (isPersonage === "Y"){
                 if (currentPersonlIndex === 1){
@@ -401,7 +514,11 @@ summerready = function () {
                     cuserid: '1001F410000000000446',
                     begindate:wholeVariateTime.begindate,
                     enddate:wholeVariateTime.enddate,
-                    dimsmap: currentStateObj
+                    dimsmap: currentStateObj,
+                    currdim:"",
+                    matstr:"",
+                    pageSize:10,
+                    pageIndex:1,
                 },
                 success:mycallback,
                 err: myerr
@@ -504,18 +621,21 @@ summerready = function () {
         })
     }
 //初次进入页面时的逻辑
-    function callAction() {
+    function callActionData(options) {
+        var params = {};
+        params.begindate = options.startTime||"2017-01-01";
+        params.enddate = options.endTime||"2017-12-31";
+        params.cuserid = cuserid;
+        params.matstr = options.matstr || "";
+        params.currdim = options.currdim || "";
+        params.pageSize = options.pageSize || 10;
+        params.pageIndex = options.pageIndex || 1;
+        params.dimsmap = options.dimsmap || {"szxmid": "all"};
+        var initialize = options.initialize||"";
         $_ajax._post({
             url:'com.mobile.controller.MobileReportAnalyzeController',
             handler:'handler',
-            data:{
-                cuserid: '1001F410000000000446',
-                begindate:'2017-01-01',
-                enddate:'2017-12-31',
-                dimsmap:{
-                    "szxmid": "all"
-                }
-            },
+            data:params,
             success:mycallback,
             err: myerr
         })
@@ -526,37 +646,23 @@ summerready = function () {
                 })
                 return;
             }
+            if (typeof initialize === "function"){
+                initialize()
+            }
             if (data.datas[0].ispersonal === "Y"){
                 isPersonage = "Y"
                 drawEhart(data)
             }else {
                 drawEhart(data);
             }
-            $("#myProject").data("nav0",JSON.stringify(data));
+            if (params.pageIndex === 1){
+                $("#myProject").data("nav0",JSON.stringify(data));
+            }
         }
         function myerr(err) {
             $.setTotastText({
                 text: "网络异常，请稍候重试！"
             })
-        }
-    }
-//退出小应用的方法
-    function functionback() {
-        var u = navigator.userAgent,
-            app = navigator.appVersion;
-        var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1;
-        var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
-        //释放一些对象和变量
-        if (isAndroid) {
-            navigator.app.exitApp();
-        }
-        if (isIOS) {
-            var pamn = {
-                "params": {
-                    "transtype": "exit_back"
-                }
-            };
-            summer.callService("SummerService.gotoNative", pamn, false);
         }
     }
 
@@ -569,42 +675,29 @@ summerready = function () {
     }
 
     function aboutInputHandler() {
-//input获取焦点的时候，移动动画和显示取消按钮
-        $(".searchBlock .searchInput").on("focus", function () {
-            $(".turnBackLastPage").hide();
-            $(".searchBlock").animate({
-                left: "-35px"
-            })
-            $(".cancelBtn").show();
-        })
-//input 失去焦点的时候
-        $(".searchBlock .searchInput").on("blur", function () {
-            $(".searchBlock").animate({
-                left: "0"
-            })
-            $(".cancelBtn").hide();
-            $(".turnBackLastPage").show();
-        })
 //点击删除的iocn，删除input里面的内容
         $(".searchBlock .delateIcon").on("click", function () {
             $(".searchBlock .searchInput").val("");
+            $(".searchBlock .delateIcon").hide();
         })
 //点击搜索按钮，进行搜索
         $(".searchBlock .searchInput").on("keyup", function () {
             var inputValue = $(".searchBlock .searchInput").val().trim();
             if (inputValue === "") {
+                $(".searchBlock .delateIcon").hide();
                 return;
             }
-            //todo  调后台进行查询
-
+        })
+        //监控键盘按下事件，显示删除按钮
+        $(".searchBlock .searchInput").on("keydown", function () {
+            $(".searchBlock .delateIcon").show();
         })
 //点击取消按钮   初始化
         $(".cancelBtn").on("click", function () {
-            $(".cancelBtn").hide();
-            $(".searchBlock").animate({
-                left: "0"
-            })
-            $(".turnBackLastPage").show();
+            $(".searchBlock .delateIcon").hide();
+            $(".searchBlock .searchInput").val("");
+            $("#photoShow").show();
+            $("#checkPage").hide();
         })
     }
 //选择维度 一些状态进行初始化
@@ -619,41 +712,24 @@ summerready = function () {
             $myProject.addClass("navActive");
         }
     }
-//调取后台那数据
-    function callActionData(startTime,endTime,params,fn) {
-        var defaultParam = {
-            "szxmid": "all"
-        }
-        $_ajax._post({
-            url:'com.mobile.controller.MobileReportAnalyzeController',
-            handler:'handler',
-            data:{
-                cuserid: '1001F410000000000446',//@todo 现在写死的，后面从原生获取，加一个参数
-                begindate:startTime,
-                enddate:endTime,
-                dimsmap: params||defaultParam
-            },
-            success:mycallback,
-            err: myerr
-        })
-        function mycallback(data) {
-            if (data.datas === null) {
-                $.setTotastText({
-                    text: "没有更多的数据！"
-                })
-                return;
+}
+//退出小应用的方法
+function functionback() {
+    var u = navigator.userAgent,
+        app = navigator.appVersion;
+    var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1;
+    var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+    //释放一些对象和变量
+    if (isAndroid) {
+        navigator.app.exitApp();
+    }
+    if (isIOS) {
+        var pamn = {
+            "params": {
+                "transtype": "exit_back"
             }
-            drawEhart(data);
-            try {
-                fn(data)
-            }catch (e){
-
-            }
-        }
-        function myerr(err) {
-            $.setTotastText({
-                text: "网络异常，请稍候重试！"
-            })
-        }
+        };
+        summer.callService("SummerService.gotoNative", pamn, false);
     }
 }
+

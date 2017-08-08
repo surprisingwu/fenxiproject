@@ -6,27 +6,24 @@
     <title></title>
     <link rel="stylesheet" href="css/font-icons.css">
     <link rel="stylesheet" href="css/iuapmobile.um.css">
-    <link rel="stylesheet" type="text/css" href="css/iuapmobile.um.listview.css">
     <link rel="stylesheet" href="css/index.css">
 </head>
 <body>
 <div class="um-win" id="photoShow" style="display: block">
-    <header>
+    <div class="um-header">
         <i class="turnBackLastPage" onclick="functionback()"></i>
-        <h3 class="headerTitle">单据列表</h3>
+        <h3 class="headerTitle">分析</h3>
         <span class="checkOperation">查询</span>
         <label class="selectWeidu" for="weiduInput">维度 <input type="text" class="selectWeiduInput" id="weiduInput" style="display: none" readonly>
         </label>
-    </header>
-    <nav>
-        <ul class="navWraper">
-            <li class="navItem navActive" id="myProject">我的项目</li>
-        </ul>
-    </nav>
-    <main class="echartsWraper">
-        <div id="pageOne">
-
+        <div class="um-nav">
+            <ul class="navWraper">
+                <li class="navItem navActive" id="myProject">我的项目</li>
+            </ul>
         </div>
+    </div>
+
+    <div class="um-content">
         <div class="checkIconWraper" style="display: block" id="checkTimeRang">
             <i></i>
         </div>
@@ -35,7 +32,7 @@
             <ul class="um-list um-no-active listWraper" id="listWraper">
             </ul>
         </div>
-    </main>
+    </div>
 </div>
 <div class="um-win" id="checkPage" style="display: none">
     <header>
@@ -43,34 +40,42 @@
         <div class="searchBlock">
             <i class="searchIcon"></i>
             <input type="text" class="searchInput" placeholder="搜索关键字">
-            <i class="delateIcon"></i>
+            <i class="delateIcon" style="display: none"></i>
         </div>
-        <span class="cancelBtn" style="display: none">取消</span>
+        <span class="cancelBtn">取消</span>
     </header>
     <main class="checkpagemain">
-        <div class="keywordsContainer">
+        <div class="keywordsContainer" style="display: block">
             <div class="keywordsTitle">
                 <span class="keywordsTitleSpan">搜索历史</span>
             </div>
-                <div class="keywordsContent">
+            <div class="keywordsContent">
                 <ul class="keywordsListWraper">
                     <li class="keywordsListItem">
-                       <span class="keywordsListText">费用</span>
-                    </li>
-                    <li class="keywordsListItem">
                         <span class="keywordsListText">费用</span>
                     </li>
                     <li class="keywordsListItem">
-                        <span class="keywordsListText">费用</span>
-                    </li>
-                    <li class="keywordsListItem">
-                        <span class="keywordsListText">费用</span>
+                        <span class="keywordsListText">交通</span>
                     </li>
                     <li class="keywordsListItem">
                         <span class="keywordsListText">报销单</span>
                     </li>
+                    <li class="keywordsListItem">
+                        <span class="keywordsListText">月</span>
+                    </li>
+                    <li class="keywordsListItem">
+                        <span class="keywordsListText">市场</span>
+                    </li>
                 </ul>
             </div>
+        </div>
+        <div id="checkResultWraper" style="display: none">
+            <ul class="checkResultLists">
+                <li class="checkResultListItem">
+                    <span class="checkResultText">啦啦啦德玛西亚</span>
+                    <i class="checkResultArrow"></i>
+                </li>
+            </ul>
         </div>
     </main>
     <footer>
